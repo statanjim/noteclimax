@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  --font-hind: 'Hind Siliguri', sans-serif;
+  --color-brand-primary: #0E6B4D;
+  --color-brand-primary-hover: #0A523B;
+  --color-brand-primary-light: #E6F5F0;
+  --color-brand-accent: #FFB400;
+  --color-brand-accent-hover: #E09E00;
+  --color-brand-bg: #F6FFFB;
+}
+
+body {
+  font-family: 'Hind Siliguri', sans-serif;
+  background-color: #F6FFFB;
+}
+
+/* Custom table styling for content_html */
+.note-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.note-content table th {
+  background-color: #0E6B4D;
+  color: #FFFFFF;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.note-content table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.note-content table tr:nth-child(even) {
+  background-color: #F8FAFC;
+}
+
+/* Highlight boxes */
+.note-content .highlight-box {
+  background-color: #E6F5F0;
+  border-left: 4px solid #0E6B4D;
+  padding: 16px;
+  border-radius: 0 8px 8px 0;
+  margin: 16px 0;
+}
+
+.note-content .warning-box {
+  background-color: #FFFBEB;
+  border-left: 4px solid #FFB400;
+  padding: 16px;
+  border-radius: 0 8px 8px 0;
+  margin: 16px 0;
+}
+

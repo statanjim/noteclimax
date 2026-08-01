@@ -1,0 +1,6 @@
+{
+  "name": "NoteClimax",
+  "description": "Class 6 to HSC Bengali Notes & Learning Portal with secure Admin Panel, PDF downloads, and premium content.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
