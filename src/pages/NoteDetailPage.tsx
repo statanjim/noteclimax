@@ -37,7 +37,6 @@ export const NoteDetailPage: React.FC<NoteDetailPageProps> = ({
   const isPurchased = purchases.some((p) => p.book_id === book.id);
   const canDownload = book.is_free || isPurchased;
 
-  // Preview Images Parse
   let previewImages: string[] = [];
   try {
     if (book.preview_images) {
@@ -98,32 +97,25 @@ export const NoteDetailPage: React.FC<NoteDetailPageProps> = ({
             <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2 font-['Hind_Siliguri']"><BookOpen className="w-5 h-5 text-[#0E6B4D]" />অধ্যায় সারসংক্ষেপ ও নির্দেশিকা</h3>
           </div>
 
-          {/* === PDF PREVIEW SECTION - ORIGINAL DESIGN SAME, JUST CONTENT CHANGED === */}
           <div id="pdf-preview" className="space-y-3">
             <h4 className="text-sm font-bold text-slate-800 flex items-center gap-2"><FileText className="w-4 h-4 text-[#0E6B4D]" /> ভেতরে কি আছে? PDF Preview</h4>
-            
-            {previewImages.length > 0 ? (
+            {previewImages.length > 0? (
               <div className="border-2 border-dashed border-emerald-200 rounded-3xl p-3 bg-slate-50 space-y-3">
                 {previewImages.slice(0, 3).map((img, idx) => (
                   <div key={idx} className="relative rounded-2xl overflow-hidden border bg-white shadow-md">
                     <img src={img} className="w-full h-auto" alt={`Preview ${idx+1}`} />
                     <span className="absolute top-2 left-2 bg-black/70 text-white text- px-2 py-0.5 rounded-full">Page {idx+1}</span>
-                    {idx === 2 && (
-                      <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-white via-white/90 to-transparent flex items-end justify-center pb-3 pointer-events-none">
-                        <span className="bg-slate-900 text-white text- px-4 py-1.5 rounded-full font-bold">৩ পেজ Preview শেষ</span>
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
-            ) : book.pdf_url ? (
+            ) : book.pdf_url? (
               <div className="border-2 border-dashed border-emerald-200 rounded-3xl p-2 bg-slate-50">
                 <div className="w-full h- rounded-2xl overflow-hidden border bg-white">
                   <iframe src={`${book.pdf_url}#toolbar=0&navpanes=0`} className="w-full h-full border-0" title="PDF Preview" />
                 </div>
               </div>
             ) : (
-              <div className="border-2 border-dashed rounded-3xl p-10 text-center bg-slate-50 text-slate-500 text-xs">কোনো Preview পাওয়া যায়নি। Admin থেকে Preview ছবি Upload করুন।</div>
+              <div className="border-2 border-dashed rounded-3xl p-10 text-center bg-slate-50 text-slate-500 text-xs">কোনো Preview পাওয়া যায়নি।</div>
             )}
           </div>
 
