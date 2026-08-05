@@ -50,9 +50,24 @@ export const NoteDetailPage: React.FC<NoteDetailPageProps> = ({
   const handleDownloadClick = () => {
     if (!currentUser && book.is_free) { onNavigate('/login'); return; }
     if (!canDownload) { setShowPaymentModal(true); return; }
-    window.open(book.pdf_url || "", '_blank');
-    setDownloadSuccessToast(true);
-    setTimeout(() => setDownloadSuccessToast(false), 4000);
+    if (!book.pdf_url) {
+      alert('PDF URL পাওয়া যায়নি! Admin Panel থেকে PDF টা আবার Upload দিন।');
+      return;
+    }
+    try {
+      const link = document.createElement('a');
+      link.href = book.pdf_url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.download = `${book.slug || 'note'}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setDownloadSuccessToast(true);
+      setTimeout(() => setDownloadSuccessToast(false), 4000);
+    } catch (e) {
+      window.open(book.pdf_url, '_blank');
+    }
   };
 
   const handlePaymentSuccess = (trxId: string, amount: number) => {
@@ -99,7 +114,6 @@ export const NoteDetailPage: React.FC<NoteDetailPageProps> = ({
 
           <div id="pdf-preview" className="space-y-4">
             <h4 className="text-base font-bold text-slate-800 flex items-center gap-2"><FileText className="w-5 h-5 text-[#0E6B4D]" /> ভেতরে কি আছে? PDF Preview</h4>
-
             {previewImages.length > 0? (
               <div className="border-2 border-dashed border-emerald-200 rounded- p-4 bg-[#F8FFFE] space-y-5">
                 {previewImages.slice(0, 3).map((img, idx) => (
@@ -121,7 +135,6 @@ export const NoteDetailPage: React.FC<NoteDetailPageProps> = ({
           </div>
 
           <div id="content" className="note-content text-slate-800 text-sm sm:text-base leading-relaxed space-y-4 font-['Hind_Siliguri'] pt-4" dangerouslySetInnerHTML={{ __html: book.content_html }} />
-
           <div className="pt-6 border-t border-slate-200 bg-emerald-50/50 p-4 rounded-2xl flex items-center justify-between">
             <div className="text-xs text-slate-600"><span className="font-bold text-[#0E6B4D] block">NoteClimax Digital Quality:</span>পাঠ্যবইয়ের সাথে মিল রেখে প্রতি অধ্যায়ের পূর্ণাঙ্গ সমাধান।</div>
             <button onClick={() => { navigator.clipboard.writeText(window.location.href); alert('লিংক কপি হয়েছে!'); }} className="px-3 py-1.5 bg-white text-slate-700 rounded-lg text-xs font-bold border flex items-center gap-1"><Share2 className="w-3.5 h-3.5" />শেয়ার করুন</button>
@@ -132,12 +145,11 @@ export const NoteDetailPage: React.FC<NoteDetailPageProps> = ({
           <div className="bg-white rounded-3xl p-6 border-2 border-[#0E6B4D] shadow-xl space-y-5">
             <div className="text-center space-y-1"><div className="w-12 h-12 rounded-2xl bg-[#E6F5F0] text-[#0E6B4D] flex items-center justify-center mx-auto text-2xl font-bold">📄</div><h3 className="font-bold text-slate-900 text-lg font-['Hind_Siliguri']">হ্যান্ডনোট PDF ডাউনলোড</h3><p className="text-xs text-slate-500">মুদ্রণযোগ্য (Printable) ও ক্লিয়ার ফন্ট পিডিএফ।</p></div>
             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2"><div className="flex justify-between text-slate-600"><span>ধরন:</span><span className="font-bold text-slate-800">{book.is_free? 'ফ্রি নোট' : 'প্রিমিয়াম গাইড'}</span></div><div className="flex justify-between text-slate-600"><span>মূল্য:</span><span className="font-bold text-[#0E6B4D]">{book.is_free? '৳০ (ফ্রি)' : `৳${book.price}`}</span></div><div className="flex justify-between text-slate-600"><span>ফরম্যাট:</span><span className="font-bold text-slate-800">HD PDF</span></div></div>
-            {canDownload? <button onClick={handleDownloadClick} className="w-full py-3.5 bg-[#0E6B4D] hover:bg-[#0A523B] text-white font-bold rounded-xl text-sm shadow-md flex items-center justify-center gap-2"><Download className="w-4 h-4 text-[#FFB400]" /><span>PDF ডাউনলোড করুন</span></button> :!currentUser? <button onClick={() => onNavigate('/login')} className="w-full py-3.5 bg-emerald-700 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2"><User className="w-4 h-4" /><span>ডাউনলোড করতে লগইন করুন</span></button> : <button onClick={() => setShowPaymentModal(true)} className="w-full py-3.5 bg-[#FFB400] text-[#0E6B4D] font-black rounded-xl text-sm flex items-center justify-center gap-2"><Smartphone className="w-4 h-4" /><span>বিকাশ/নগদে কিনুন (৳{book.price})</span></button>}
+            {canDownload? <button type="button" onClick={handleDownloadClick} className="w-full py-3.5 bg-[#0E6B4D] hover:bg-[#0A523B] text-white font-bold rounded-xl text-sm shadow-md flex items-center justify-center gap-2"><Download className="w-4 h-4 text-[#FFB400]" /><span>PDF ডাউনলোড করুন</span></button> :!currentUser? <button onClick={() => onNavigate('/login')} className="w-full py-3.5 bg-emerald-700 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2"><User className="w-4 h-4" /><span>ডাউনলোড করতে লগইন করুন</span></button> : <button onClick={() => setShowPaymentModal(true)} className="w-full py-3.5 bg-[#FFB400] text-[#0E6B4D] font-black rounded-xl text-sm flex items-center justify-center gap-2"><Smartphone className="w-4 h-4" /><span>বিকাশ/নগদে কিনুন (৳{book.price})</span></button>}
             {downloadSuccessToast && <div className="p-3 bg-emerald-600 text-white rounded-xl text-xs font-bold text-center animate-bounce">✅ PDF ডাউনলোড শুরু হয়েছে!</div>}
           </div>
           <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-200 text-xs text-slate-700 text-center"><span className="font-bold text-[#0E6B4D] block">১০০% কপিরাইট ও মান নিশ্চিতকরণ</span><p className="text-slate-500">NoteClimax শিক্ষক প্যানেল দ্বারা পরীক্ষিত</p></div>
         </div>
-      </div>
       {showPaymentModal && <BkashPaymentModal book={book} onClose={() => setShowPaymentModal(false)} onSuccess={handlePaymentSuccess} />}
     </div>
   );
